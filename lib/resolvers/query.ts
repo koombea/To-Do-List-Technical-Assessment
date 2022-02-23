@@ -1,12 +1,9 @@
 import { prisma } from '../prisma-client';
 
 export const Query = {
-  getItems: (_: any, args: { cursor?: number }) =>
+  getItems: (_: any, args: { offset?: number }) =>
     prisma.items.findMany({
-      cursor: {
-        id: args.cursor ? 1 : args.cursor
-      },
-      skip: !args.cursor ? 0 : args.cursor > 0 ? args.cursor - 1 : args.cursor,
+      skip: !args.offset ? 0 : args.offset > 0 ? args.offset - 1 : args.offset,
       take: 10,
       orderBy: {
         id: 'asc'

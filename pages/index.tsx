@@ -1,7 +1,9 @@
+import { gql, useMutation } from '@apollo/client';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import styled from 'styled-components';
+import { CONSTANTS } from '../lib/constants';
 import { Colors } from '../styles/styleConstants';
 import { StyledButton } from '../styles/StyledButton';
 import { StyledInput } from '../styles/StyledInput';
@@ -27,6 +29,22 @@ const AppBar = styled.header`
 
 const Home: NextPage = () => {
   const [content, setContent] = useState('');
+  const CREATE = gql`
+      mutation CREATE {
+        create(
+          content: "${content}"
+        ) {
+          id
+          content
+          isCompleted
+        }
+      }
+    `;
+  const [createMutation] = useMutation(CREATE);
+  const onAddItem = async () => {
+    const response = await createMutation();
+    console.log(response);
+  };
   return (
     <div>
       <Head>
@@ -52,13 +70,14 @@ const Home: NextPage = () => {
             }}
           >
             <StyledInput
-              style={{ marginBottom: '10px', marginRight: "20px" }}
+              style={{ marginBottom: '10px', marginRight: '20px' }}
               value={content}
               characterWidth={content.length}
-              placeholder="Item content here"
+              placeholder="Content here"
               onChange={(evt) => setContent(evt.target.value)}
+              maxLength={CONSTANTS.ITEMS.MAX_CONTENT_LENGTH}
             />
-            <StyledButton>Add Item</StyledButton>
+            <StyledButton onClick={onAddItem}>Add Item</StyledButton>
           </div>
         </div>
       </main>
