@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
+import styled from 'styled-components';
 import { SubTitle } from '../pages';
 import Item from './Item';
 
@@ -22,6 +23,12 @@ interface ItemListProps {
   onPageChanged: (offset: number) => void;
 }
 
+const StyledWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`;
+
 const ItemList = (props: ItemListProps) => {
   const [pageCount, setPageCount] = useState(0);
 
@@ -38,14 +45,16 @@ const ItemList = (props: ItemListProps) => {
 
   const renderData = () => (
     <>
-      {props.data.map((item, index) => (
-        <Item
-          onIsCompletedChanged={props.onItemIsCompletedChanged}
-          onDelete={props.onItemIsDeleted}
-          data={item}
-          key={index}
-        />
-      ))}
+      <StyledWrapper>
+        {props.data.map((item, index) => (
+          <Item
+            onIsCompletedChanged={props.onItemIsCompletedChanged}
+            onDelete={props.onItemIsDeleted}
+            data={item}
+            key={index}
+          />
+        ))}
+      </StyledWrapper>
       <ReactPaginate
         nextLabel="next >"
         onPageChange={handlePageClick}

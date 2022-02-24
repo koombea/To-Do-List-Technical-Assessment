@@ -101,7 +101,7 @@ const Home: NextPage<HomeProps> = (props) => {
           onItemIsDeleted={onItemIsDeleted}
           onItemIsCompletedChanged={onItemIsCompletedChanged}
           data={itemsData}
-          dataLimit={3}
+          dataLimit={CONSTANTS.ITEMS.PAGINATION_OFFSET}
           countRemaining={props.countRemaining}
           onPageChanged={fetchData}
         />
