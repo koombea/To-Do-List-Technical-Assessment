@@ -4,8 +4,13 @@ type Items {
   isCompleted: Boolean!
 }
 
+type GetItemsResponse {
+  items: [Items]!
+  count: Int!
+}
+
 type Query {
-  getItems(offset: Int): [Items]!
+  getItems(offset: Int): GetItemsResponse!
 }
 
 type Mutation {

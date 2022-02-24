@@ -1,13 +1,17 @@
-import { gql, useMutation } from '@apollo/client';
-import type { NextPage } from 'next';
+import { useMutation } from '@apollo/client';
+import type { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import ItemList from '../components/ItemList';
+import ItemList, { ItemData } from '../components/ItemList';
 import { CONSTANTS } from '../lib/constants';
 import { Colors } from '../styles/styleConstants';
 import { StyledButton } from '../styles/StyledButton';
 import { StyledInput } from '../styles/StyledInput';
+import Swal from 'sweetalert2';
+import { CREATE } from '../lib/graphql/mutations';
+import client from '../lib/apollo-client';
+import { GET_ITEMS } from '../lib/graphql/queries';
 
 const TitleLogo = styled.h1`
   cursor: pointer;
@@ -15,7 +19,7 @@ const TitleLogo = styled.h1`
   margin-top: 0;
   font-size: 55px;
 `;
-const SubTitle = styled.h4`
+export const SubTitle = styled.h4`
   color: ${Colors.light};
   margin-top: 0;
   font-weight: 400;
@@ -28,23 +32,36 @@ const AppBar = styled.header`
   margin-bottom: 20px;
 `;
 
-const Home: NextPage = () => {
+interface HomeProps {
+  initialItemData: ItemData[];
+  countRemaining: number;
+}
+
+const Home: NextPage<HomeProps> = (props) => {
   const [content, setContent] = useState('');
-  const CREATE = gql`
-      mutation CREATE {
-        create(
-          content: "${content}"
-        ) {
-          id
-          content
-          isCompleted
-        }
-      }
-    `;
-  const [createMutation] = useMutation(CREATE);
-  const onAddItem = async () => {
-    const response = await createMutation();
+  const [itemsData, setItemsData] = useState<ItemData[]>(props.initialItemData);
+  const [createMutation] = useMutation(CREATE(content));
+
+  const fetchData = async (offset: number = 1) => {
+    const response = await client.query({
+      query: GET_ITEMS(offset)
+    });
+    setItemsData(response.data.getItems.items);
   };
+
+  const onAddItem = async () => {
+    try {
+      const response = await createMutation();
+      fetchData();
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
+  const onItemIsCompletedChanged = (isCompleted: boolean) => {};
+
+  const onItemIsDeleted = () => {};
+
   return (
     <div>
       <Head>
@@ -81,12 +98,28 @@ const Home: NextPage = () => {
           </div>
         </div>
         <ItemList
-          dataLimit={10}
-          pageLimit={2}
+          onItemIsDeleted={onItemIsDeleted}
+          onItemIsCompletedChanged={onItemIsCompletedChanged}
+          data={itemsData}
+          dataLimit={3}
+          countRemaining={props.countRemaining}
+          onPageChanged={fetchData}
         />
       </main>
     </div>
   );
+};
+
+export const getStaticProps: GetStaticProps<HomeProps> = async (context) => {
+  const response = await client.query({
+    query: GET_ITEMS(1)
+  });
+  return {
+    props: {
+      initialItemData: response.data.getItems.items,
+      countRemaining: response.data.getItems.count
+    }
+  };
 };
 
 export default Home;

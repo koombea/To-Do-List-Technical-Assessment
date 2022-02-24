@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { FormEvent, useState } from 'react';
-import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import ReactPaginate from 'react-paginate';
+import { SubTitle } from '../pages';
 import Item from './Item';
 
 export interface ItemData {
@@ -10,95 +11,70 @@ export interface ItemData {
 }
 
 interface ItemListProps {
+  /**The number of items to be displayed per page. */
   dataLimit: number;
-  pageLimit: number;
+  /**The actual data used to render the items. */
+  data: ItemData[];
+  /**How many remaining items after the current offset. */
+  countRemaining: number;
+  onItemIsCompletedChanged: (isCompleted: boolean) => void;
+  onItemIsDeleted: () => void;
+  onPageChanged: (offset: number) => void;
 }
 
-const StyledGrid = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-content: stretch;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
 const ItemList = (props: ItemListProps) => {
-  const [data, setData] = useState<ItemData[]>([]);
-  const [pages] = useState(Math.round(data.length / props.dataLimit));
-  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
 
-  function goToNextPage() {
-    setCurrentPage((page) => page + 1);
-  }
+  useEffect(() => {
+    setPageCount(
+      Math.ceil((props.data.length + props.countRemaining) / props.dataLimit)
+    );
+  }, [props.dataLimit]);
 
-  function goToPreviousPage() {
-    setCurrentPage((page) => page - 1);
-  }
-
-  function changePage(event: FormEvent<HTMLButtonElement>) {
-    const pageNumber = Number(event.currentTarget.textContent);
-    setCurrentPage(pageNumber);
-  }
-
-  const getPaginatedData = () => {
-    const startIndex = currentPage * props.dataLimit - props.dataLimit;
-    const endIndex = startIndex + props.dataLimit;
-    return data.slice(startIndex, endIndex);
+  // Invoke when user click to request another page.
+  const handlePageClick = (event: { selected: number }) => {
+    props.onPageChanged(event.selected + 1);
   };
 
-  const getPaginationGroup = () => {
-    let start =
-      Math.floor((currentPage - 1) / props.pageLimit) * props.pageLimit;
-    if (currentPage === pages + 1) {
-      return new Array(props.pageLimit).fill(0).map((_, idx) => start + idx);
-    } else {
-      return new Array(props.pageLimit)
-        .fill(0)
-        .map((_, idx) => start + idx + 1);
-    }
-  };
-
-  const onItemIsCompletedChanged = (isCompleted: boolean) => {
-    console.log(isCompleted);
-  };
-
-  const onItemIsDeleted = () => {};
+  const renderData = () => (
+    <>
+      {props.data.map((item, index) => (
+        <Item
+          onIsCompletedChanged={props.onItemIsCompletedChanged}
+          onDelete={props.onItemIsDeleted}
+          data={item}
+          key={index}
+        />
+      ))}
+      <ReactPaginate
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={3}
+        marginPagesDisplayed={2}
+        pageCount={pageCount}
+        previousLabel="< previous"
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="previous-btn btn"
+        previousLinkClassName="page-link"
+        nextClassName="next-btn btn"
+        nextLinkClassName="page-link"
+        breakLabel="..."
+        breakClassName="page-item"
+        breakLinkClassName="page-link"
+        containerClassName="pagination"
+        activeClassName="active"
+      />
+    </>
+  );
 
   return (
     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-      <StyledGrid>
-        {getPaginatedData().map((d, idx) => (
-          <Item
-            onIsCompletedChanged={onItemIsCompletedChanged}
-            onDelete={onItemIsDeleted}
-            data={d}
-            key={idx}
-          />
-        ))}
-      </StyledGrid>
-
-      <div>
-        <button onClick={goToPreviousPage} disabled={currentPage === 1}>
-          prev
-        </button>
-
-        {getPaginationGroup().map((item, index) => (
-          <button
-            key={index}
-            onClick={changePage}
-            className={`paginationItem ${
-              currentPage === item ? 'active' : null
-            }`}
-          >
-            <span>{item}</span>
-          </button>
-        ))}
-
-        <button onClick={goToNextPage} disabled={currentPage === pages + 1}>
-          next
-        </button>
-      </div>
+      {props.data.length > 0 ? (
+        renderData()
+      ) : (
+        <SubTitle>No items to be shown... Let's add some!</SubTitle>
+      )}
     </div>
   );
 };
