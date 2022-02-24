@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { FormEvent, useState } from 'react';
+import styled from 'styled-components';
+import Item from './Item';
 
 interface ItemListProps {
   data: any[];
@@ -7,10 +9,19 @@ interface ItemListProps {
   pageLimit: number;
 }
 
+const StyledGrid = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: stretch;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
 const ItemList = (props: ItemListProps) => {
   const [pages] = useState(Math.round(props.data.length / props.dataLimit));
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   function goToNextPage() {
     setCurrentPage((page) => page + 1);
   }
@@ -43,12 +54,12 @@ const ItemList = (props: ItemListProps) => {
   };
 
   return (
-    <div>
-      <div>
+    <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+      <StyledGrid>
         {getPaginatedData().map((d, idx) => (
-          <div key={idx}>{d}</div>
+          <Item content={d} isCompleted={false} key={idx} />
         ))}
-      </div>
+      </StyledGrid>
 
       <div>
         <button onClick={goToPreviousPage} disabled={currentPage === 1}>
