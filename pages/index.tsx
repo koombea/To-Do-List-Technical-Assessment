@@ -3,6 +3,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 import styled from 'styled-components';
+import ItemList from '../components/ItemList';
 import { CONSTANTS } from '../lib/constants';
 import { Colors } from '../styles/styleConstants';
 import { StyledButton } from '../styles/StyledButton';
@@ -80,6 +81,13 @@ const Home: NextPage = () => {
             <StyledButton onClick={onAddItem}>Add Item</StyledButton>
           </div>
         </div>
+        <ItemList
+          data={'1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21'.split(
+            ' '
+          )}
+          dataLimit={10}
+          pageLimit={2}
+        />
       </main>
     </div>
   );
