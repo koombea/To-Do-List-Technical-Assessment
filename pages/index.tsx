@@ -44,7 +44,6 @@ const Home: NextPage = () => {
   const [createMutation] = useMutation(CREATE);
   const onAddItem = async () => {
     const response = await createMutation();
-    console.log(response);
   };
   return (
     <div>
@@ -82,9 +81,6 @@ const Home: NextPage = () => {
           </div>
         </div>
         <ItemList
-          data={'1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21'.split(
-            ' '
-          )}
           dataLimit={10}
           pageLimit={2}
         />

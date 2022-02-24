@@ -3,8 +3,13 @@ import { FormEvent, useState } from 'react';
 import styled from 'styled-components';
 import Item from './Item';
 
+export interface ItemData {
+  id: number;
+  content: string;
+  isCompleted: boolean;
+}
+
 interface ItemListProps {
-  data: any[];
   dataLimit: number;
   pageLimit: number;
 }
@@ -19,7 +24,8 @@ const StyledGrid = styled.div`
 `;
 
 const ItemList = (props: ItemListProps) => {
-  const [pages] = useState(Math.round(props.data.length / props.dataLimit));
+  const [data, setData] = useState<ItemData[]>([]);
+  const [pages] = useState(Math.round(data.length / props.dataLimit));
   const [currentPage, setCurrentPage] = useState(1);
 
   function goToNextPage() {
@@ -38,7 +44,7 @@ const ItemList = (props: ItemListProps) => {
   const getPaginatedData = () => {
     const startIndex = currentPage * props.dataLimit - props.dataLimit;
     const endIndex = startIndex + props.dataLimit;
-    return props.data.slice(startIndex, endIndex);
+    return data.slice(startIndex, endIndex);
   };
 
   const getPaginationGroup = () => {
@@ -53,11 +59,22 @@ const ItemList = (props: ItemListProps) => {
     }
   };
 
+  const onItemIsCompletedChanged = (isCompleted: boolean) => {
+    console.log(isCompleted);
+  };
+
+  const onItemIsDeleted = () => {};
+
   return (
     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
       <StyledGrid>
         {getPaginatedData().map((d, idx) => (
-          <Item content={d} isCompleted={false} key={idx} />
+          <Item
+            onIsCompletedChanged={onItemIsCompletedChanged}
+            onDelete={onItemIsDeleted}
+            data={d}
+            key={idx}
+          />
         ))}
       </StyledGrid>
 
