@@ -1,15 +1,20 @@
 type Items {
   id: ID
-  content: String
-  isCompleted: Boolean
+  content: String!
+  isCompleted: Boolean!
+}
+
+type GetItemsResponse {
+  items: [Items]!
+  count: Int!
 }
 
 type Query {
-  getItems(cursor: Int): [Items]!
+  getItems(offset: Int): GetItemsResponse!
 }
 
 type Mutation {
-  create(content: String!): Items
-  deleteById(id: Int!): Items
-  setIsCompleted(id: Int!, isCompleted: Boolean!): Items
+  create(content: String!): Items!
+  deleteById(id: Int!): Items!
+  setIsCompleted(id: Int!, isCompleted: Boolean!): Items!
 }

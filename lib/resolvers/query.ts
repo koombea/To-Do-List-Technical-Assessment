@@ -1,15 +1,17 @@
+import { CONSTANTS } from '../constants';
 import { prisma } from '../prisma-client';
 
 export const Query = {
-  getItems: (_: any, args: { cursor?: number }) =>
-    prisma.items.findMany({
-      cursor: {
-        id: args.cursor ? 1 : args.cursor
-      },
-      skip: !args.cursor ? 0 : args.cursor > 0 ? args.cursor - 1 : args.cursor,
-      take: 10,
+  getItems: async (_: any, args: { offset?: number }) => {
+    const items = await prisma.items.findMany({
+      skip: !args.offset ? 0 : args.offset > 0 ? args.offset - 1 : args.offset,
+      take: CONSTANTS.ITEMS.PAGINATION_OFFSET,
       orderBy: {
-        id: 'asc'
+        id: 'desc'
       }
-    })
+    });
+    const count = await prisma.items.count();
+
+    return { items, count };
+  }
 };
