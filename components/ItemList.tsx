@@ -9,8 +9,13 @@ import { SubTitle } from '../pages';
 import Item, { ItemData } from './Item';
 
 interface ItemListProps {
+  /**How many items will be displayed per page. */
   itemsPerPage: number;
-  initialData: ItemData[];
+  /**Used when another item has been added. */
+  updatedData: ItemData[];
+  /**Used when another item has been added. */
+  updatedDataCount: number;
+  /**Used to keep track of the current offset. */
   onCurrentOffsetChanged: (offset: number) => void;
 }
 
@@ -86,7 +91,18 @@ function ItemList(props: ItemListProps) {
 
   useEffect(() => {
     fetchData();
-  }, [itemOffset, props.itemsPerPage, props.initialData]);
+  }, [itemOffset, props.itemsPerPage]);
+  useEffect(() => {
+    if (props.updatedDataCount > dataCount) {
+      fetchData();
+    } else {
+      setCurrentItems(
+        props.updatedData.slice(0, CONSTANTS.ITEMS.PAGINATION_OFFSET)
+      );
+      setPageCount(Math.ceil(props.updatedDataCount / props.itemsPerPage));
+      setDataCount(props.updatedDataCount);
+    }
+  }, [props.updatedData]);
 
   const handlePageClick = (event: { selected: number }) => {
     const newOffset = (event.selected * props.itemsPerPage) % dataCount;
