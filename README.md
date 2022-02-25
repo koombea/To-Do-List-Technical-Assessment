@@ -11,6 +11,7 @@
 - Prisma
 - PostgreSQL
 - StyledComponents
+- Cypress
 
 ## Set-up
 Localize the `~.env` file and change `USER`, `PASSWORD`, `DB_NAME` and `SHADOW_DB_NAME` for your database credentials.
