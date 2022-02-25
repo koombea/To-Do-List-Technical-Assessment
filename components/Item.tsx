@@ -50,10 +50,14 @@ const Item = (props: ItemProps) => {
     }
   };
   const onDeleteClick = () => props.onDelete(props.data.id);
+
+  React.useEffect(() => {
+    setUpdatedIsCompleted(props.data.isCompleted);
+  }, [props.data]);
   return (
     <StyledContainer>
       <input
-        style={{ transform: 'scale(1.8)' }}
+        style={{ transform: 'scale(1.8)', zIndex: "100" }}
         size={25}
         onChange={onCheckChange}
         type={'checkbox'}
@@ -66,7 +70,7 @@ const Item = (props: ItemProps) => {
         size={25}
         color={Colors.secondary}
         onClick={onDeleteClick}
-        style={{ cursor: 'pointer', marginLeft: 'auto' }}
+        style={{ cursor: 'pointer', marginLeft: 'auto', zIndex: "100" }}
       />
       <StyledLine isCompleted={updatedIsCompleted} />
     </StyledContainer>

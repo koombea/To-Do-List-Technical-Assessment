@@ -31,7 +31,7 @@ const ItemList = (props: ItemListProps) => {
     setPageCount(
       Math.ceil((props.data.length + props.countRemaining) / props.dataLimit)
     );
-  }, [props.dataLimit]);
+  }, [props.countRemaining]);
 
   // Invoke when user click to request another page.
   const handlePageClick = (event: { selected: number }) => {
