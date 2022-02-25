@@ -10,13 +10,7 @@ export const Query = {
         id: 'desc'
       }
     });
-    const count = await prisma.items.count({
-      skip: !args.offset
-        ? CONSTANTS.ITEMS.PAGINATION_OFFSET
-        : args.offset > 0
-        ? CONSTANTS.ITEMS.PAGINATION_OFFSET * args.offset
-        : CONSTANTS.ITEMS.PAGINATION_OFFSET
-    });
+    const count = await prisma.items.count();
 
     return { items, count };
   }

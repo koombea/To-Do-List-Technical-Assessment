@@ -1,21 +1,17 @@
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
-import type { GetServerSideProps, GetStaticProps, NextPage } from 'next';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
-import ItemList, { ItemData } from '../components/ItemList';
+import ItemList from '../components/ItemList';
 import { CONSTANTS } from '../lib/constants';
 import { Colors } from '../styles/styleConstants';
 import { StyledButton } from '../styles/StyledButton';
 import { StyledInput } from '../styles/StyledInput';
 import Swal from 'sweetalert2';
-import {
-  CREATE,
-  DELETE_BY_ID,
-  SET_IS_COMPLETED
-} from '../lib/graphql/mutations';
-import client from '../lib/apollo-client';
+import { CREATE } from '../lib/graphql/mutations';
 import { GET_ITEMS } from '../lib/graphql/queries';
+import { ItemData } from '../components/Item';
 
 const TitleLogo = styled.h1`
   cursor: pointer;
@@ -43,26 +39,18 @@ interface HomeProps {
 
 const Home: NextPage<HomeProps> = (props) => {
   const [content, setContent] = useState('');
-  const [itemsData, setItemsData] = useState<ItemData[]>(props.initialItemData);
-  const [countRemaining, setCountRemaining] = useState(
-    props.initialCountRemaining
-  );
   const [createMutation] = useMutation(CREATE);
   const [getItems] = useLazyQuery(GET_ITEMS);
-  const [deleteItem] = useMutation(DELETE_BY_ID);
-  const [setIsCompleted] = useMutation(SET_IS_COMPLETED);
   const [currentOffset, setCurrentOffset] = useState(1);
+  const [initialData, setInitialData] = useState([]);
 
-  const fetchData = async (itemsUpdated: boolean) => {
+  const fetchData = async () => {
     const response = await getItems({
       variables: {
         offset: currentOffset
       }
     });
-    if (itemsUpdated) {
-      setCountRemaining(response.data.getItems.count);
-    }
-    setItemsData(response.data.getItems.items);
+    setInitialData(response.data.getItems.items);
   };
 
   const onAddItem = async () => {
@@ -70,37 +58,17 @@ const Home: NextPage<HomeProps> = (props) => {
       const response = await createMutation({
         variables: { content: content }
       });
+      if (response.errors) {
+        await Swal.fire('Error!', response.errors[0].message, 'error');
+        return;
+      }
       setContent('');
-      fetchData(true);
+      fetchData();
     } catch (error: any) {
       console.log(error.message);
+      Swal.fire('Error!', error.message, 'error');
     }
   };
-
-  const onItemIsCompletedChanged = async (id: number, isCompleted: boolean) => {
-    const response = await setIsCompleted({
-      //TODO - For some reason, if I don't parse the id, it is sent as a string.
-      variables: {
-        id: parseInt(id.toString()),
-        isCompleted: isCompleted
-      }
-    });
-    fetchData(true);
-  };
-
-  const onItemIsDeleted = async (id: number) => {
-    const response = await deleteItem({
-      //TODO - For some reason, if I don't parse the id, it is sent as a string.
-      variables: {
-        id: parseInt(id.toString())
-      }
-    });
-    fetchData(true);
-  };
-
-  useEffect(() => {
-    fetchData(false);
-  }, [currentOffset]);
 
   return (
     <div>
@@ -138,33 +106,15 @@ const Home: NextPage<HomeProps> = (props) => {
           </div>
         </div>
         <ItemList
-          onItemIsDeleted={onItemIsDeleted}
-          onItemIsCompletedChanged={onItemIsCompletedChanged}
-          data={itemsData}
-          dataLimit={CONSTANTS.ITEMS.PAGINATION_OFFSET}
-          countRemaining={countRemaining}
-          onPageChanged={(offset) => setCurrentOffset(offset)}
+          onCurrentOffsetChanged={(offset) => {
+            setCurrentOffset(offset);
+          }}
+          initialData={initialData}
+          itemsPerPage={CONSTANTS.ITEMS.PAGINATION_OFFSET}
         />
       </main>
     </div>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<HomeProps> = async (
-  context
-) => {
-  const response = await client.query({
-    query: GET_ITEMS,
-    variables: {
-      offset: 1
-    }
-  });
-  return {
-    props: {
-      initialItemData: response.data.getItems.items,
-      initialCountRemaining: response.data.getItems.count
-    }
-  };
 };
 
 export default Home;
