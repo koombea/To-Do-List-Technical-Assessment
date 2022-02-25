@@ -9,7 +9,11 @@ import { Colors } from '../styles/styleConstants';
 import { StyledButton } from '../styles/StyledButton';
 import { StyledInput } from '../styles/StyledInput';
 import Swal from 'sweetalert2';
-import { CREATE } from '../lib/graphql/mutations';
+import {
+  CREATE,
+  DELETE_BY_ID,
+  SET_IS_COMPLETED
+} from '../lib/graphql/mutations';
 import client from '../lib/apollo-client';
 import { GET_ITEMS } from '../lib/graphql/queries';
 
@@ -65,9 +69,25 @@ const Home: NextPage<HomeProps> = (props) => {
     }
   };
 
-  const onItemIsCompletedChanged = (isCompleted: boolean) => {};
+  const onItemIsCompletedChanged = (id: number, isCompleted: boolean) => {
+    try {
+      client.mutate({
+        mutation: SET_IS_COMPLETED(id, isCompleted)
+      });
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
-  const onItemIsDeleted = () => {};
+  const onItemIsDeleted = (id: number) => {
+    try {
+      client.mutate({
+        mutation: DELETE_BY_ID(id)
+      });
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div>

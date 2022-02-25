@@ -19,8 +19,8 @@ interface ItemListProps {
   data: ItemData[];
   /**How many remaining items after the current offset. */
   countRemaining: number;
-  onItemIsCompletedChanged: (isCompleted: boolean) => void;
-  onItemIsDeleted: () => void;
+  onItemIsCompletedChanged: (id: number, isCompleted: boolean) => void;
+  onItemIsDeleted: (id: number) => void;
   onPageChanged: (offset: number) => void;
 }
 
@@ -45,7 +45,7 @@ const ItemList = (props: ItemListProps) => {
           onIsCompletedChanged={props.onItemIsCompletedChanged}
           onDelete={props.onItemIsDeleted}
           data={item}
-          key={index}
+          key={`item-${index}`}
         />
       ))}
       <ReactPaginate

@@ -6,8 +6,8 @@ import { ItemData } from './ItemList';
 
 interface ItemProps {
   data: ItemData;
-  onIsCompletedChanged: (isCompleted: boolean) => void;
-  onDelete: () => void;
+  onIsCompletedChanged: (id: number, isCompleted: boolean) => void;
+  onDelete: (id: number) => void;
 }
 
 const StyledContainer = styled.div`
@@ -46,10 +46,10 @@ const Item = (props: ItemProps) => {
     const value = e.target.checked;
     setUpdatedIsCompleted(value);
     if (props.onIsCompletedChanged) {
-      props.onIsCompletedChanged(value);
+      props.onIsCompletedChanged(props.data.id, value);
     }
   };
-  const onDeleteClick = () => props.onDelete();
+  const onDeleteClick = () => props.onDelete(props.data.id);
   return (
     <StyledContainer>
       <input
@@ -57,6 +57,7 @@ const Item = (props: ItemProps) => {
         size={25}
         onChange={onCheckChange}
         type={'checkbox'}
+        checked={updatedIsCompleted}
       />
       <p style={{ marginLeft: '20px', marginRight: '20px', fontSize: '23px' }}>
         {props.data.content}
