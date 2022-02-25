@@ -48,10 +48,11 @@ const Home: NextPage<HomeProps> = (props) => {
     props.initialCountRemaining
   );
   const [createMutation] = useMutation(CREATE(content));
+  const [currentOffset, setCurrentOffset] = useState(1);
 
-  const fetchData = async (offset: number = 1) => {
+  const fetchData = async () => {
     const response = await client.query({
-      query: GET_ITEMS(offset),
+      query: GET_ITEMS(currentOffset),
       fetchPolicy: 'network-only'
     });
     setItemsData(response.data.getItems.items);
@@ -74,6 +75,7 @@ const Home: NextPage<HomeProps> = (props) => {
       client.mutate({
         mutation: SET_IS_COMPLETED(id, isCompleted)
       });
+      fetchData();
     } catch (error: any) {
       console.log(error.message);
     }
@@ -84,10 +86,15 @@ const Home: NextPage<HomeProps> = (props) => {
       client.mutate({
         mutation: DELETE_BY_ID(id)
       });
+      fetchData();
     } catch (error: any) {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentOffset]);
 
   return (
     <div>
@@ -130,7 +137,7 @@ const Home: NextPage<HomeProps> = (props) => {
           data={itemsData}
           dataLimit={CONSTANTS.ITEMS.PAGINATION_OFFSET}
           countRemaining={countRemaining}
-          onPageChanged={fetchData}
+          onPageChanged={(offset) => setCurrentOffset(offset)}
         />
       </main>
     </div>
