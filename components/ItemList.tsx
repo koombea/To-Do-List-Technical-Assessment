@@ -24,12 +24,6 @@ interface ItemListProps {
   onPageChanged: (offset: number) => void;
 }
 
-const StyledWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-`;
-
 const ItemList = (props: ItemListProps) => {
   const [pageCount, setPageCount] = useState(0);
 
@@ -41,21 +35,19 @@ const ItemList = (props: ItemListProps) => {
 
   // Invoke when user click to request another page.
   const handlePageClick = (event: { selected: number }) => {
-    props.onPageChanged((event.selected * CONSTANTS.ITEMS.PAGINATION_OFFSET) + 1);
+    props.onPageChanged(event.selected * CONSTANTS.ITEMS.PAGINATION_OFFSET + 1);
   };
 
   const renderData = () => (
     <>
-      <StyledWrapper>
-        {props.data.map((item, index) => (
-          <Item
-            onIsCompletedChanged={props.onItemIsCompletedChanged}
-            onDelete={props.onItemIsDeleted}
-            data={item}
-            key={index}
-          />
-        ))}
-      </StyledWrapper>
+      {props.data.map((item, index) => (
+        <Item
+          onIsCompletedChanged={props.onItemIsCompletedChanged}
+          onDelete={props.onItemIsDeleted}
+          data={item}
+          key={index}
+        />
+      ))}
       <ReactPaginate
         nextLabel="next >"
         onPageChange={handlePageClick}

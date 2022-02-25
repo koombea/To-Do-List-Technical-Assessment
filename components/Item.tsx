@@ -11,8 +11,7 @@ interface ItemProps {
 }
 
 const StyledContainer = styled.div`
-  width: fit-content;
-  max-width: 100%;
+  width: 100%;
   height: fit-content;
   padding: 20px;
   display: flex;
@@ -22,6 +21,7 @@ const StyledContainer = styled.div`
   justify-content: start;
   align-items: center;
   position: relative;
+  box-shadow: 0px 9px 7px -8px #6746c373;
 `;
 
 const StyledLine = styled.div<{ isCompleted: boolean }>`
@@ -31,8 +31,8 @@ const StyledLine = styled.div<{ isCompleted: boolean }>`
   left: 0;
   right: 0;
   margin: auto;
-  width: 35%;
-  height: 1px;
+  width: 100%;
+  height: 2px;
   background-color: ${Colors.light};
   display: ${(props) => (props.isCompleted ? 'block' : 'none')};
 `;
@@ -52,11 +52,18 @@ const Item = (props: ItemProps) => {
   const onDeleteClick = () => props.onDelete();
   return (
     <StyledContainer>
-      <input onChange={onCheckChange} type={'checkbox'} />
-      <p style={{ marginLeft: '20px', marginRight: '20px' }}>
+      <input
+        style={{ transform: 'scale(1.8)' }}
+        size={25}
+        onChange={onCheckChange}
+        type={'checkbox'}
+      />
+      <p style={{ marginLeft: '20px', marginRight: '20px', fontSize: '23px' }}>
         {props.data.content}
       </p>
       <BsFillTrashFill
+        size={25}
+        color={Colors.secondary}
         onClick={onDeleteClick}
         style={{ cursor: 'pointer', marginLeft: 'auto' }}
       />
