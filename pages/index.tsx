@@ -51,8 +51,8 @@ const Home: NextPage<HomeProps> = (props) => {
         offset: currentOffset
       }
     });
-    setInitialData(response.data.getItems.items);
     setInitialDataCount(response.data.getItems.count);
+    setInitialData(response.data.getItems.items);
   };
 
   const onAddItem = async () => {
