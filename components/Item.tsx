@@ -60,9 +60,9 @@ const Item = (props: ItemProps) => {
   useEffect(() => {
     setUpdatedIsCompleted(props.data.isCompleted);
   }, [props.data]);
-  
+
   return (
-    <StyledContainer>
+    <StyledContainer className="item-component">
       <input
         style={{ transform: 'scale(1.8)', zIndex: '100' }}
         size={25}
