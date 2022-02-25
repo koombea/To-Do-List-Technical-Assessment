@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import styled from 'styled-components';
+import { CONSTANTS } from '../lib/constants';
 import { SubTitle } from '../pages';
 import Item from './Item';
 
@@ -40,7 +41,7 @@ const ItemList = (props: ItemListProps) => {
 
   // Invoke when user click to request another page.
   const handlePageClick = (event: { selected: number }) => {
-    props.onPageChanged(event.selected + 1);
+    props.onPageChanged((event.selected * CONSTANTS.ITEMS.PAGINATION_OFFSET) + 1);
   };
 
   const renderData = () => (

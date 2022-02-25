@@ -7,7 +7,7 @@ export const Query = {
       skip: !args.offset ? 0 : args.offset > 0 ? args.offset - 1 : args.offset,
       take: CONSTANTS.ITEMS.PAGINATION_OFFSET,
       orderBy: {
-        id: 'asc'
+        id: 'desc'
       }
     });
     const count = await prisma.items.count({

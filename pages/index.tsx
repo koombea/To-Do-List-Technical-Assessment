@@ -34,24 +34,31 @@ const AppBar = styled.header`
 
 interface HomeProps {
   initialItemData: ItemData[];
-  countRemaining: number;
+  initialCountRemaining: number;
 }
 
 const Home: NextPage<HomeProps> = (props) => {
   const [content, setContent] = useState('');
   const [itemsData, setItemsData] = useState<ItemData[]>(props.initialItemData);
+  const [countRemaining, setCountRemaining] = useState(
+    props.initialCountRemaining
+  );
   const [createMutation] = useMutation(CREATE(content));
 
   const fetchData = async (offset: number = 1) => {
     const response = await client.query({
-      query: GET_ITEMS(offset)
+      query: GET_ITEMS(offset),
+      fetchPolicy: 'network-only'
     });
     setItemsData(response.data.getItems.items);
+    if (response.data.getItems.count > 0)
+      setCountRemaining(response.data.getItems.count);
   };
 
   const onAddItem = async () => {
     try {
       const response = await createMutation();
+      setContent('');
       fetchData();
     } catch (error: any) {
       console.log(error.message);
@@ -102,7 +109,7 @@ const Home: NextPage<HomeProps> = (props) => {
           onItemIsCompletedChanged={onItemIsCompletedChanged}
           data={itemsData}
           dataLimit={CONSTANTS.ITEMS.PAGINATION_OFFSET}
-          countRemaining={props.countRemaining}
+          countRemaining={countRemaining}
           onPageChanged={fetchData}
         />
       </main>
@@ -117,7 +124,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async (context) => {
   return {
     props: {
       initialItemData: response.data.getItems.items,
-      countRemaining: response.data.getItems.count
+      initialCountRemaining: response.data.getItems.count
     }
   };
 };
