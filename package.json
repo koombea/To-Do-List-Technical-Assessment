@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "restartDB": "npx prisma db seed",
+    "cypress:open": "npm run restartDB && cypress open",
+    "test": "npm run cypress:open"
   },
   "dependencies": {
     "@apollo/client": "^3.5.9",
@@ -26,11 +29,16 @@
   },
   "devDependencies": {
     "@types/micro-cors": "^0.1.2",
-    "@types/node": "17.0.21",
+    "@types/node": "^17.0.21",
     "@types/react": "17.0.39",
     "@types/styled-components": "^5.1.23",
+    "cypress": "^9.5.0",
     "eslint": "8.9.0",
     "eslint-config-next": "12.1.0",
-    "typescript": "4.5.5"
+    "ts-node": "^10.5.0",
+    "typescript": "^4.5.5"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

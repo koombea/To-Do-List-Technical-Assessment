@@ -127,11 +127,11 @@ function ItemList(props: ItemListProps) {
         marginPagesDisplayed={2}
         pageCount={pageCount}
         previousLabel="< previous"
-        pageClassName="page-item"
+        pageClassName="page-item-number"
         pageLinkClassName="page-link"
-        previousClassName="page-item btn"
+        previousClassName="page-item-previous btn"
         previousLinkClassName="page-link"
-        nextClassName="page-item btn"
+        nextClassName="page-item-next btn"
         nextLinkClassName="page-link"
         breakLabel="..."
         breakClassName="page-item"
