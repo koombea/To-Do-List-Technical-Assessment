@@ -43,6 +43,7 @@ const Home: NextPage<HomeProps> = (props) => {
   const [getItems] = useLazyQuery(GET_ITEMS);
   const [currentOffset, setCurrentOffset] = useState(1);
   const [initialData, setInitialData] = useState([]);
+  const [initialDataCount, setInitialDataCount] = useState(0);
 
   const fetchData = async () => {
     const response = await getItems({
@@ -51,6 +52,7 @@ const Home: NextPage<HomeProps> = (props) => {
       }
     });
     setInitialData(response.data.getItems.items);
+    setInitialDataCount(response.data.getItems.count);
   };
 
   const onAddItem = async () => {
@@ -109,7 +111,8 @@ const Home: NextPage<HomeProps> = (props) => {
           onCurrentOffsetChanged={(offset) => {
             setCurrentOffset(offset);
           }}
-          initialData={initialData}
+          updatedData={initialData}
+          updatedDataCount={initialDataCount}
           itemsPerPage={CONSTANTS.ITEMS.PAGINATION_OFFSET}
         />
       </main>
