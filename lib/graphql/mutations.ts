@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const CREATE = (content: string) => gql`
-  mutation CREATE {
-    create(content: "${content}") {
+export const CREATE = gql`
+  mutation ($content: String!) {
+    create(content: $content) {
       id
       content
       isCompleted
@@ -10,9 +10,9 @@ export const CREATE = (content: string) => gql`
   }
 `;
 
-export const DELETE_BY_ID = (id: number) => gql`
-  mutation DELETE_BY_ID {
-    deleteById(id: ${id}) {
+export const DELETE_BY_ID = gql`
+  mutation ($id: Int!) {
+    deleteById(id: $id) {
       id
       content
       isCompleted
@@ -20,9 +20,9 @@ export const DELETE_BY_ID = (id: number) => gql`
   }
 `;
 
-export const SET_IS_COMPLETED = (id: number, isCompleted: boolean) => gql`
-  mutation SET_IS_COMPLETED {
-    setIsCompleted(id: ${id}, isCompleted: ${isCompleted}) {
+export const SET_IS_COMPLETED = gql`
+  mutation ($id: Int!, $isCompleted: Boolean!) {
+    setIsCompleted(id: $id, isCompleted: $isCompleted) {
       id
       content
       isCompleted

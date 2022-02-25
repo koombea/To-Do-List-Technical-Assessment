@@ -51,8 +51,6 @@ const ItemList = (props: ItemListProps) => {
       <ReactPaginate
         nextLabel="next >"
         onPageChange={handlePageClick}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={2}
         pageCount={pageCount}
         previousLabel="< previous"
         pageClassName="page-item"

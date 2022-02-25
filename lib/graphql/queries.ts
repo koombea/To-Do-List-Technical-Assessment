@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const GET_ITEMS = (offset: number) => gql`
-  query GET_ITEMS {
-    getItems(offset: ${offset}) {
+export const GET_ITEMS = gql`
+  query ($offset: Int) {
+    getItems(offset: $offset) {
       items {
         id
         content
