@@ -26,3 +26,9 @@ npm run dev
 Go to `http://localhost:3000/` to see the app running.
 
 Go to `http://localhost:3000/api/graphql` to see the GraphQL playground.
+
+To run the E2E test run:
+
+```
+npm run test
+```
