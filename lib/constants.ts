@@ -5,7 +5,7 @@ export const CONSTANTS = {
   ITEMS: {
     MIN_CONTENT_LENGTH: minContentLength,
     MAX_CONTENT_LENGTH: maxContentLength,
-    PAGINATION_OFFSET: 6
+    PAGINATION_MAX_TO_TAKE: 6
   },
   ERRORS: {
     MIN_CONTENT_LENGTH: `Provided content needs to be at least ${minContentLength} characters long.`,

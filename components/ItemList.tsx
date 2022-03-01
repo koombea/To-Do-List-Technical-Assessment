@@ -44,7 +44,7 @@ function ItemList(props: ItemListProps) {
 
       const items = response.data.getItems.items;
       const count = response.data.getItems.count;
-      setCurrentItems(items.slice(0, CONSTANTS.ITEMS.PAGINATION_OFFSET));
+      setCurrentItems(items.slice(0, CONSTANTS.ITEMS.PAGINATION_MAX_TO_TAKE));
       setPageCount(Math.ceil(count / props.itemsPerPage));
       setDataCount(count);
     } catch (error: any) {
@@ -97,7 +97,7 @@ function ItemList(props: ItemListProps) {
       fetchData();
     } else {
       setCurrentItems(
-        props.updatedData.slice(0, CONSTANTS.ITEMS.PAGINATION_OFFSET)
+        props.updatedData.slice(0, CONSTANTS.ITEMS.PAGINATION_MAX_TO_TAKE)
       );
       setPageCount(Math.ceil(props.updatedDataCount / props.itemsPerPage));
       setDataCount(props.updatedDataCount);

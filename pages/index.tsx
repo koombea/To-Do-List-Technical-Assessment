@@ -113,7 +113,7 @@ const Home: NextPage<HomeProps> = (props) => {
           }}
           updatedData={initialData}
           updatedDataCount={initialDataCount}
-          itemsPerPage={CONSTANTS.ITEMS.PAGINATION_OFFSET}
+          itemsPerPage={CONSTANTS.ITEMS.PAGINATION_MAX_TO_TAKE}
         />
       </main>
     </div>
