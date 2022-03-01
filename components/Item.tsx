@@ -50,10 +50,8 @@ const Item = (props: ItemProps) => {
 
   const onCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.checked;
+    props.onIsCompletedChanged(props.data.id, value);
     setUpdatedIsCompleted(value);
-    if (props.onIsCompletedChanged) {
-      props.onIsCompletedChanged(props.data.id, value);
-    }
   };
   const onDeleteClick = () => props.onDelete(props.data.id);
 
