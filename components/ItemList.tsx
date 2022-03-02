@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
 import { SubTitle } from '../pages';
-import Item from './Item';
 
 export interface ItemsData {
   id: number;
@@ -14,8 +12,7 @@ interface PaginatedItemsProps {
   itemsPerPage: number;
   itemsCount: number;
   items: ItemsData[];
-  onSetIsCompleted: (id: number, isCompleted: boolean) => Promise<void>;
-  onDeteleById: (id: number) => Promise<void>;
+  children?: React.ReactNode;
   onSetCurrentPage: (page: number) => void;
 }
 
@@ -26,14 +23,7 @@ function PaginatedItems(props: PaginatedItemsProps) {
 
   return props.items.length > 0 ? (
     <>
-      {props.items.map((item, index) => (
-        <Item
-          data={item}
-          onDelete={props.onDeteleById}
-          onIsCompletedChanged={props.onSetIsCompleted}
-          key={index}
-        />
-      ))}
+      {props.children}
       <ReactPaginate
         nextLabel="next >"
         onPageChange={handlePageClick}

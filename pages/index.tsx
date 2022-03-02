@@ -14,7 +14,7 @@ import {
   SET_IS_COMPLETED
 } from '../lib/graphql/mutations';
 import { GET_ITEMS } from '../lib/graphql/queries';
-import { ItemData } from '../components/Item';
+import Item, { ItemData } from '../components/Item';
 import PaginatedItems from '../components/ItemList';
 import client from '../lib/apollo-client';
 
@@ -160,10 +160,17 @@ const Home: NextPage<HomeProps> = (props: HomeProps) => {
           items={items}
           itemsCount={itemsCount}
           itemsPerPage={CONSTANTS.ITEMS.PAGINATION_MAX_TO_TAKE}
-          onDeteleById={onDeteleById}
           onSetCurrentPage={onSetCurrentPage}
-          onSetIsCompleted={onSetIsCompleted}
-        />
+        >
+          {items.map((item, index) => (
+            <Item
+              data={item}
+              onDelete={onDeteleById}
+              onIsCompletedChanged={onSetIsCompleted}
+              key={index}
+            />
+          ))}
+        </PaginatedItems>
       </main>
     </div>
   );
