@@ -25,8 +25,9 @@ describe('App E2E Test', () => {
           res();
         });
       });
-      cy.wait(1000);
+      
       if (i === items.length - 1) {
+        cy.wait(1000);
         cy.get('.item-component').should('have.length', 6);
         cy.get('.page-item-number').should('have.length', 2);
       }
@@ -34,6 +35,6 @@ describe('App E2E Test', () => {
   });
   it('Go to the page #2', () => {
     cy.get('.page-item-next').click();
-    cy.get('.item-component').should('have.length', 3);
+    cy.get('.item-component').should('have.length', 4);
   });
 });

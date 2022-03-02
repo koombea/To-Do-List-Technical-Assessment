@@ -44,22 +44,11 @@ const StyledLine = styled.div<{ isCompleted: boolean }>`
 `;
 
 const Item = (props: ItemProps) => {
-  const [updatedIsCompleted, setUpdatedIsCompleted] = useState(
-    props.data.isCompleted
-  );
-
   const onCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.checked;
-    setUpdatedIsCompleted(value);
-    if (props.onIsCompletedChanged) {
-      props.onIsCompletedChanged(props.data.id, value);
-    }
+    props.onIsCompletedChanged(props.data.id, value);
   };
   const onDeleteClick = () => props.onDelete(props.data.id);
-
-  useEffect(() => {
-    setUpdatedIsCompleted(props.data.isCompleted);
-  }, [props.data]);
 
   return (
     <StyledContainer className="item-component">
@@ -68,7 +57,7 @@ const Item = (props: ItemProps) => {
         size={25}
         onChange={onCheckChange}
         type={'checkbox'}
-        checked={updatedIsCompleted}
+        checked={props.data.isCompleted}
       />
       <p style={{ marginLeft: '20px', marginRight: '20px', fontSize: '23px' }}>
         {props.data.content}
@@ -79,7 +68,7 @@ const Item = (props: ItemProps) => {
         onClick={onDeleteClick}
         style={{ cursor: 'pointer', marginLeft: 'auto', zIndex: '100' }}
       />
-      <StyledLine isCompleted={updatedIsCompleted} />
+      <StyledLine isCompleted={props.data.isCompleted} />
     </StyledContainer>
   );
 };

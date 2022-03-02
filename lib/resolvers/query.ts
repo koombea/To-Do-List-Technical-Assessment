@@ -2,10 +2,12 @@ import { CONSTANTS } from '../constants';
 import { prisma } from '../prisma-client';
 
 export const Query = {
-  getItems: async (_: any, args: { offset?: number }) => {
+  getItems: async (_: any, args: { page?: number }) => {
     const items = await prisma.items.findMany({
-      skip: !args.offset ? 0 : args.offset > 0 ? args.offset - 1 : args.offset,
-      take: CONSTANTS.ITEMS.PAGINATION_OFFSET,
+      skip: !args.page
+        ? 0
+        : (args.page - 1) * CONSTANTS.ITEMS.PAGINATION_MAX_TO_TAKE,
+      take: CONSTANTS.ITEMS.PAGINATION_MAX_TO_TAKE,
       orderBy: {
         id: 'desc'
       }

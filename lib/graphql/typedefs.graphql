@@ -10,7 +10,7 @@ type GetItemsResponse {
 }
 
 type Query {
-  getItems(offset: Int): GetItemsResponse!
+  getItems(page: Int): GetItemsResponse!
 }
 
 type Mutation {
