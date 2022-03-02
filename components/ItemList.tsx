@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
+import { SubTitle } from '../pages';
 import Item from './Item';
 
 export interface ItemsData {
@@ -23,7 +24,7 @@ function PaginatedItems(props: PaginatedItemsProps) {
     props.onSetCurrentPage(event.selected + 1); //starts at 0
   };
 
-  return (
+  return props.items.length > 0 ? (
     <>
       {props.items.map((item, index) => (
         <Item
@@ -53,28 +54,11 @@ function PaginatedItems(props: PaginatedItemsProps) {
         activeClassName="active"
       />
     </>
+  ) : (
+    <SubTitle style={{ paddingLeft: '25px' }}>
+      No items to show, let's add some!
+    </SubTitle>
   );
 }
 
 export default PaginatedItems;
-{
-  /* <ReactPaginate
-        nextLabel="next >"
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={2}
-        pageCount={pageCount}
-        previousLabel="< previous"
-        pageClassName="page-item-number"
-        pageLinkClassName="page-link"
-        previousClassName="page-item-previous btn"
-        previousLinkClassName="page-link"
-        nextClassName="page-item-next btn"
-        nextLinkClassName="page-link"
-        breakLabel="..."
-        breakClassName="page-item"
-        breakLinkClassName="page-link"
-        containerClassName="pagination"
-        activeClassName="active"
-      /> */
-}
